@@ -1,0 +1,7 @@
+Package: perf
+Version: 5.15.0-microsoft-standard-WSL2
+Section: base
+Priority: optional
+Architecture: amd64
+Maintainer: buty4649@gmail.com
+Description: Perf performance analysis tool for Linux
