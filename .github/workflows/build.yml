@@ -1,0 +1,38 @@
+name: Build and release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      WSL_VERSION: 5.15
+    steps:
+      - uses: actions/checkout@v4
+      - name: setup
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          apt-get update
+          apt-get install -y wget tar build-essential flex bison libelf-dev libssl-dev \
+                             libnewt-dev libncurses5-dev libdw-dev binutils-dev dpkg-dev \
+                             fakeroot python3
+      - name: build perf
+        run: |
+          wget https://github.com/microsoft/WSL2-Linux-Kernel/archive/refs/heads/linux-msft-wsl-${WSL_VERSION}.y.tar.gz -O linux-msft-wsl.tar.gz
+          mkdir linux
+          tar -C linux -xf linux-msft-wsl.tar.gz --strip-components=1
+          cd linux/tools/perf
+          make LDFLAGS='-static'
+      - name: build deb package
+        run: |
+          mkdir -p perf/usr/bin perf/DEBIAN
+          cp -p linux/tools/perf/perf perf/usr/bin/
+          cp DEBIAN/control perf/DEBIAN/
+          fakeroot dpkg-deb --build perf
+          mv perf.deb perf-${WSL_VERSION}.deb
+      - name: upload deb package
+        run: |
+          echo "VERSION: ${WSL_VERSION}"
+            gh release create ${WSL_VERSION} perf-${WSL_VERSION}.deb
