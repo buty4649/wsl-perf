@@ -36,5 +36,4 @@ COMMAND
 COPY DEBIAN/control DEBIAN/
 
 WORKDIR /usr/src
-RUN fakeroot dpkg-deb --build /usr/src/perf && \
-    mv perf.deb perf-${WSL_VERSION}-microsoft-standard-WSL2.deb
+RUN fakeroot dpkg-deb --build /usr/src/perf

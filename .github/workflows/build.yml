@@ -16,9 +16,9 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: false
-          tags: wsl-perf:${WSL_VERSION}
+          tags: wsl-perf
       - name: Copy deb package
-        run: docker run --rm -v $(pwd):/mnt -w /mnt wsl-perf:${WSL_VERSION} cp /usr/src/perf-${WSL_VERSION}-microsoft-standard-WSL2.deb .
+        run: docker run --rm -v $(pwd):/mnt -w /mnt wsl-perf cp /usr/src/perf.deb perf-${WSL_VERSION}-microsoft-standard-WSL2.deb
       - name: Upload deb package
         run: |
           echo "VERSION=${WSL_VERSION}"
