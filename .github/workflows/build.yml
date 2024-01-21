@@ -20,6 +20,8 @@ jobs:
       - name: Copy deb package
         run: docker run --rm -v $(pwd):/mnt -w /mnt wsl-perf cp /usr/src/perf.deb perf-${WSL_VERSION}-microsoft-standard-WSL2.deb
       - name: Upload deb package
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           echo "VERSION=${WSL_VERSION}"
           gh release create v${WSL_VERSION} perf-${WSL_VERSION}-microsoft-standard-WSL2.deb -t v${WSL_VERSION} -n "perf ${WSL_VERSION} for WSL2"
